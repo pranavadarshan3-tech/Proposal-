@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>For Yashmin 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #c0435a;
+    --rose-light: #f5c6cf;
+    --rose-pale: #fff0f2;
+    --gold: #b8933a;
+    --cream: #fdf8f0;
+    --ink: #2a1a1f;
+    --muted: #7a5060;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--cream);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── Floating petals ── */
+  .petal {
+    position: fixed;
+    width: 10px;
+    height: 14px;
+    background: radial-gradient(ellipse at 40% 30%, #f9a8b8, #d95f7a);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    pointer-events: none;
+    animation: fall linear infinite;
+    z-index: 0;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── Main container ── */
+  .scene {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    z-index: 1;
+  }
+
+  /* ── Envelope intro ── */
+  #intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    animation: breathe 3s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%,100% { transform: scale(1); }
+    50%      { transform: scale(1.04); }
+  }
+  .envelope-wrap { position: relative; width: 180px; height: 130px; }
+  .envelope-body {
+    width: 180px; height: 130px;
+    background: #fff;
+    border: 2px solid var(--rose-light);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(192,67,90,0.18);
+  }
+  .envelope-flap {
+    position: absolute; top: 0; left: 0;
+    width: 0; height: 0;
+    border-left: 90px solid transparent;
+    border-right: 90px solid transparent;
+    border-top: 65px solid var(--rose-light);
+    transform-origin: top center;
+    transition: transform 0.6s ease;
+  }
+  .envelope-bottom-left {
+    position: absolute; bottom: 0; left: 0;
+    width: 0; height: 0;
+    border-bottom: 75px solid #fce8ec;
+    border-right: 90px solid transparent;
+  }
+  .envelope-bottom-right {
+    position: absolute; bottom: 0; right: 0;
+    width: 0; height: 0;
+    border-bottom: 75px solid #fce8ec;
+    border-left: 90px solid transparent;
+  }
+  .envelope-heart {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    animation: pulse-heart 1.2s ease-in-out infinite;
+    z-index: 2;
+  }
+  @keyframes pulse-heart {
+    0%,100% { transform: translate(-50%,-50%) scale(1); }
+    50%      { transform: translate(-50%,-50%) scale(1.2); }
+  }
+  #intro:hover .envelope-flap { transform: rotateX(180deg); }
+  .tap-hint {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-style: italic;
+    letter-spacing: 0.03em;
+    animation: fadein 1.5s ease 1s both;
+  }
+  @keyframes fadein { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform:none; } }
+
+  /* ── Letter card ── */
+  #letter {
+    display: none;
+    max-width: 600px;
+    width: 100%;
+    animation: unfold 0.9s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  @keyframes unfold {
+    from { opacity:0; transform: scaleY(0.3) translateY(-40px); }
+    to   { opacity:1; transform: none; }
+  }
+  .paper {
+    background: #fff;
+    border: 1.5px solid var(--rose-light);
+    border-radius: 2px;
+    padding: 3rem 2.8rem 2.5rem;
+    box-shadow: 0 12px 60px rgba(192,67,90,0.12), 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+  }
+  .paper::before {
+    content:'';
+    position: absolute;
+    left: 2.5rem; top: 0; bottom: 0;
+    width: 1px;
+    background: repeating-linear-gradient(to bottom, var(--rose-light) 0, var(--rose-light) 24px, transparent 24px, transparent 48px);
+    opacity: 0.4;
+  }
+  .letter-salutation {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--rose);
+    margin-bottom: 1.5rem;
+  }
+  .letter-body {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: var(--ink);
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+  .letter-body em {
+    color: var(--rose);
+    font-style: italic;
+  }
+  .letter-sign {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--gold);
+    text-align: right;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 0 0 2.5rem;
+    color: var(--rose-light);
+    font-size: 1.1rem;
+  }
+  .divider::before, .divider::after {
+    content:''; flex:1;
+    height: 1px;
+    background: var(--rose-light);
+  }
+
+  /* ── Question ── */
+  .question {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    line-height: 1.4;
+  }
+
+  /* ── Buttons ── */
+  .btn-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    padding: 0.85rem 2.4rem;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .btn-yes {
+    background: var(--rose);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(192,67,90,0.35);
+  }
+  .btn-yes:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(192,67,90,0.45); }
+  .btn-no {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--rose-light);
+    position: absolute; /* for running away */
+  }
+  .btn-no:hover { background: #fce8ec; }
+
+  /* ── No button running zone ── */
+  #no-zone {
+    position: relative;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow: visible;
+  }
+
+  /* ── Response screens ── */
+  #result {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 520px;
+    animation: fadein 0.8s ease both;
+  }
+  .result-icon { font-size: 5rem; margin-bottom: 1rem; animation: pop 0.6s cubic-bezier(0.36,1.6,0.64,1) both; }
+  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+  .result-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: var(--rose);
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .result-sub {
+    font-size: 1.25rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  /* ── Confetti ── */
+  .confetti-piece {
+    position: fixed;
+    width: 8px; height: 12px;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: 2px;
+    animation: confetti-fall 3s ease-out forwards;
+    z-index: 999;
+  }
+  @keyframes confetti-fall {
+    0%   { opacity:1; transform: translateY(0) rotate(0deg); }
+    100% { opacity:0; transform: translateY(100vh) rotate(720deg); }
+  }
+
+  /* ── Status message ── */
+  #status {
+    margin-top: 1.2rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-style: italic;
+    min-height: 1.4em;
+  }
+
+  @media (max-width: 500px) {
+    .paper { padding: 2rem 1.5rem 2rem; }
+    .question { font-size: 1.4rem; }
+    .letter-body { font-size: 1.05rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Petals -->
+<div id="petals"></div>
+
+<div class="scene">
+
+  <!-- INTRO: envelope -->
+  <div id="intro" onclick="openLetter()" role="button" aria-label="Open the letter">
+    <div class="envelope-wrap">
+      <div class="envelope-body">
+        <div class="envelope-flap"></div>
+        <div class="envelope-bottom-left"></div>
+        <div class="envelope-bottom-right"></div>
+        <div class="envelope-heart">💌</div>
+      </div>
+    </div>
+    <p class="tap-hint">Tap to open something special…</p>
+  </div>
+
+  <!-- LETTER -->
+  <div id="letter">
+    <div class="paper">
+      <p class="letter-salutation">My dearest Yashmin,</p>
+      <p class="letter-body">
+        There are moments in life that feel too big for ordinary words —
+        and yet, I find myself here, trying to find the right ones for you.<br><br>
+        Every time I see you, something <em>quiet and certain</em> settles inside me.
+        You are the kind of person who makes an ordinary day feel like it actually matters.
+        Your smile is the thing I think about when I need courage.<br><br>
+        I've been holding this question close to my heart for a while now,
+        afraid of the answer, but more afraid of never asking.
+        So here I am — a little nervous, completely sincere — asking you
+        something I've wanted to ask for a long time.
+      </p>
+      <p class="letter-sign">— Pranav 🌹</p>
+
+      <div class="divider">❧</div>
+
+      <p class="question">"Will you be mine, Yashmin?"</p>
+
+      <div class="btn-group" id="yes-group">
+        <button class="btn btn-yes" onclick="handleAnswer('yes')">Yes, always 💕</button>
+      </div>
+
+      <div id="no-zone">
+        <button class="btn btn-no" id="no-btn" onmouseenter="runAway()" ontouchstart="runAway()">
+          Maybe not…
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result" style="display:none; flex-direction:column; align-items:center; text-align:center; max-width:520px;">
+    <div class="result-icon" id="result-icon"></div>
+    <h1 class="result-heading" id="result-heading"></h1>
+    <p class="result-sub" id="result-sub"></p>
+    <p id="status"></p>
+  </div>
+
+</div>
+
+<script>
+  /* ── EmailJS config ──
+     1. Go to https://www.emailjs.com and sign up free
+     2. Create an Email Service (connect Gmail → "pranavadarshan3@gmail.com")
+     3. Create an Email Template with variables: {{answer}}, {{to_email}}
+     4. Replace the three values below                                      */
+  const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";   // Account > API Keys
+  const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";   // Email Services tab
+  const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";  // Email Templates tab
+  const NOTIFY_EMAIL        = "pranavadarshan3@gmail.com";
+
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  /* ── Petals ── */
+  const petalContainer = document.getElementById('petals');
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    p.style.animationDuration = (8 + Math.random() * 10) + 's';
+    p.style.transform = `scale(${0.5 + Math.random()})`;
+    petalContainer.appendChild(p);
+  }
+
+  /* ── Open envelope ── */
+  function openLetter() {
+    document.getElementById('intro').style.display = 'none';
+    const letter = document.getElementById('letter');
+    letter.style.display = 'block';
+  }
+
+  /* ── No button runs away ── */
+  let noClicks = 0;
+  function runAway() {
+    noClicks++;
+    const btn = document.getElementById('no-btn');
+    const zone = document.getElementById('no-zone');
+    const zW = zone.offsetWidth;
+    const zH = zone.offsetHeight;
+    const bW = btn.offsetWidth;
+    const maxX = zW - bW;
+    const newX = Math.floor(Math.random() * maxX);
+    const newY = (Math.random() > 0.5 ? 1 : -1) * Math.floor(Math.random() * 80);
+    btn.style.position = 'absolute';
+    btn.style.left = newX + 'px';
+    btn.style.top  = (newY) + 'px';
+    btn.style.transition = 'left 0.25s ease, top 0.25s ease';
+    if (noClicks >= 5) {
+      btn.style.opacity = '0';
+      btn.style.pointerEvents = 'none';
+    }
+  }
+
+  /* ── Handle answer ── */
+  function handleAnswer(choice) {
+    document.getElementById('letter').style.display = 'none';
+    const result = document.getElementById('result');
+    result.style.display = 'flex';
+
+    if (choice === 'yes') {
+      document.getElementById('result-icon').textContent = '💕';
+      document.getElementById('result-heading').textContent = 'She said YES!';
+      document.getElementById('result-sub').textContent =
+        'Yashmin, you just made someone the happiest person in the world. 🌹';
+      launchConfetti();
+    } else {
+      document.getElementById('result-icon').textContent = '🥀';
+      document.getElementById('result-heading').textContent = 'She said no…';
+      document.getElementById('result-sub').textContent =
+        'That took courage. Thank you for your honesty, Yashmin.';
+    }
+
+    sendEmail(choice);
+  }
+
+  /* ── Send email via EmailJS ── */
+  function sendEmail(choice) {
+    const status = document.getElementById('status');
+    status.textContent = 'Sending notification…';
+
+    const label = choice === 'yes' ? '💕 YES — She said yes!' : '💔 No — She declined.';
+
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email: NOTIFY_EMAIL,
+      answer:   label,
+      from_name: 'Yashmin\'s Response',
+      subject:  'Yashmin answered your proposal!',
+      message:  `Yashmin's answer to your proposal: ${label}`
+    }).then(() => {
+      status.textContent = '✓ Notification sent to your Gmail.';
+    }).catch((err) => {
+      console.error('EmailJS error:', err);
+      status.textContent = '⚠ Could not send email. Check EmailJS config.';
+    });
+  }
+
+  /* ── Confetti ── */
+  function launchConfetti() {
+    const colors = ['#c0435a','#f9a8b8','#b8933a','#f5c6cf','#fff','#e8a0b0'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top  = '-20px';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.animationDelay = (Math.random() * 1.5) + 's';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }, i * 30);
+    }
+  }
+</script>
+</body>
+</html>
